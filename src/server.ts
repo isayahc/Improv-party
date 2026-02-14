@@ -1,4 +1,11 @@
 import { serve } from "bun";
+import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
+
+// --- CONFIGURATION ---
+// Ensure ELEVENLABS_API_KEY is set in your Railway Variables
+const client = new ElevenLabsClient({
+  apiKey: process.env.ELEVENLABS_API_KEY,
+});
 
 // Store user + timestamp of last "ping"
 type UserSession = {
@@ -9,7 +16,7 @@ type UserSession = {
 let sessions: UserSession[] = [];
 let currentTurnIndex = 0;
 
-console.log(`❤️ Heartbeat Server running on port ${process.env.PORT || 3000}`);
+console.log(`❤️ Heartbeat & Transcribe Server running on port ${process.env.PORT || 3000}`);
 
 serve({
   port: process.env.PORT || 3000,
@@ -25,27 +32,26 @@ serve({
 
     if (req.method === "OPTIONS") return new Response(null, { headers });
 
-    // --- THE MAGIC: STATUS + HEARTBEAT ---
-    // Client polls: GET /status?id=user-123
+    // --- 1. STATUS + HEARTBEAT ---
     if (url.pathname === "/status" && req.method === "GET") {
       const userId = url.searchParams.get("id");
 
-      // 1. REGISTER / UPDATE HEARTBEAT
+      // Register / Update Heartbeat
       if (userId) {
         const existing = sessions.find((s) => s.id === userId);
         if (existing) {
-          existing.lastSeen = Date.now(); // Update timestamp
+          existing.lastSeen = Date.now();
         } else {
-          sessions.push({ id: userId, lastSeen: Date.now() }); // New user!
+          sessions.push({ id: userId, lastSeen: Date.now() });
           console.log(`User connected: ${userId}`);
         }
       }
 
-      // 2. CLEANUP (Remove users gone for > 5 seconds)
+      // Cleanup (Remove users gone for > 5 seconds)
       const now = Date.now();
       sessions = sessions.filter((s) => now - s.lastSeen < 5000);
 
-      // 3. DETERMINE TURN
+      // Determine Turn
       if (sessions.length === 0) currentTurnIndex = 0;
       else currentTurnIndex = currentTurnIndex % sessions.length;
 
@@ -54,14 +60,14 @@ serve({
       return new Response(
         JSON.stringify({
           activeUser,
-          onlineCount: sessions.length, // accurate count
-          users: sessions.map(s => s.id) // helpful for debug
+          onlineCount: sessions.length,
+          users: sessions.map((s) => s.id),
         }),
         { headers }
       );
     }
 
-    // --- PASS TURN ---
+    // --- 2. PASS TURN ---
     if (url.pathname === "/pass" && req.method === "POST") {
       if (sessions.length > 0) {
         currentTurnIndex = (currentTurnIndex + 1) % sessions.length;
@@ -69,6 +75,42 @@ serve({
       return new Response(JSON.stringify({ success: true }), { headers });
     }
 
-    return new Response("Not Found", { status: 404 });
+    // --- 3. TRANSCRIPTION (ElevenLabs Integration) ---
+    if (url.pathname === "/transcribe" && req.method === "POST") {
+      try {
+        const formData = await req.formData();
+        const audioFile = formData.get("file");
+
+        if (!audioFile || !(audioFile instanceof Blob)) {
+          return new Response("No audio file uploaded", { status: 400, headers });
+        }
+
+        console.log(`Transcribing ${audioFile.size} bytes...`);
+
+        // Send to ElevenLabs Scribe
+        const transcription = await client.speechToText.convert({
+          file: audioFile,
+          modelId: "scribe_v2", // The new high-quality model
+          tagAudioEvents: true,
+          languageCode: "eng",
+          diarize: true, // Identifies "Speaker A", "Speaker B"
+        });
+
+        console.log("Transcription success:", transcription.text);
+
+        return new Response(JSON.stringify(transcription), {
+          headers: { ...headers, "Content-Type": "application/json" },
+        });
+
+      } catch (error: any) {
+        console.error("Transcription failed:", error);
+        return new Response(JSON.stringify({ error: error.message }), { 
+            status: 500, 
+            headers: { ...headers, "Content-Type": "application/json" } 
+        });
+      }
+    }
+
+    return new Response("Not Found", { status: 404, headers });
   },
 });
