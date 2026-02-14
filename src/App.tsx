@@ -18,6 +18,7 @@ import { BottomNav } from "./components/bottomNavigation";
 // import { VoiceRecorder } from "./components/voiceTest";
 // import { VoiceRoom } from "./components/VoiceStation";
 import { TurnBasedRecorder } from "./components/TurnBasedRecorder";
+import { GameRoom } from "./components/GameRoom";
 
 import logo from "./logo.svg";
 import reactLogo from "./react.svg";
@@ -79,12 +80,23 @@ import reactLogo from "./react.svg";
 
 export function App() {
   return (
-    <div>
-      <header>
-        <TurnBasedRecorder></TurnBasedRecorder>
-        <BottomNav></BottomNav>
+    <div className="flex flex-col min-h-screen bg-slate-50">
+      
+      {/* 1. Header (Optional Title) */}
+      <header className="bg-white border-b border-slate-200 p-4 sticky top-0 z-10">
+        <h1 className="text-lg font-bold text-center text-slate-800 tracking-tight">
+          IMPROV PARTY
+        </h1>
       </header>
-      <main></main>
+
+      {/* 2. Main Content Area */}
+      <main className="flex-1 flex flex-col justify-center p-4 pb-24">
+        <GameRoom />
+      </main>
+
+      {/* 3. Navigation (Fixed to Bottom) */}
+      <BottomNav />
+      
     </div>
   );
 }
