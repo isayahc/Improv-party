@@ -10,6 +10,7 @@
     "server": "bun run src/server.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.74.0",
     "@clerk/clerk-react": "^5.60.1",
     "@elevenlabs/client": "^0.14.0",
     "@elevenlabs/elevenlabs-js": "^2.35.0",
