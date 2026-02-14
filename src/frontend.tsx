@@ -10,8 +10,7 @@ import { createRoot } from "react-dom/client";
 import { App } from "./App";
 import { ClerkProvider } from "@clerk/clerk-react";
 
-const PUBLISHABLE_KEY = process.env.VITE_CLERK_PUBLISHABLE_KEY;
-
+const PUBLISHABLE_KEY = process.env.BUN_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 if (!PUBLISHABLE_KEY) {
   throw new Error("Add your Clerk Publishable Key to the .env file");
@@ -20,7 +19,9 @@ if (!PUBLISHABLE_KEY) {
 const elem = document.getElementById("root")!;
 const app = (
   <StrictMode>
-    <App />
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+      <App />
+    </ClerkProvider>
   </StrictMode>
 );
 
