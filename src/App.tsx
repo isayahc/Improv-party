@@ -1,8 +1,23 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from "@clerk/clerk-react";
 import { APITester } from "./APITester";
 import "./index.css";
 import { BottomNav } from "./components/bottomNavigation";
+// import { VoiceTest}
+// import { VoiceRecorder } from "./components/voiceTest";
+// import { VoiceRoom } from "./components/VoiceStation";
+import { TurnBasedRecorder } from "./components/TurnBasedRecorder";
 
 import logo from "./logo.svg";
 import reactLogo from "./react.svg";
@@ -38,25 +53,38 @@ import reactLogo from "./react.svg";
 //   );
 // }
 
+// export function App() {
+//   return (
+//     <div>
+//       <header>
+//         {/* This shows if the user is NOT logged in */}
+//         <SignedOut>
+//           <h1>Please sign in to continue</h1>
+//           <SignInButton mode="modal" />
+//         </SignedOut>
+
+//         {/* This shows if the user IS logged in */}
+//         <SignedIn>
+//           <TurnBasedRecorder></TurnBasedRecorder>
+//           <BottomNav></BottomNav>
+//           <UserButton />
+//         </SignedIn>
+//       </header>
+//       <main>
+
+//       </main>
+//     </div>
+//   );
+// }
+
 export function App() {
   return (
     <div>
       <header>
-        {/* This shows if the user is NOT logged in */}
-        <SignedOut>
-          <h1>Please sign in to continue</h1>
-          <SignInButton mode="modal" />
-        </SignedOut>
-
-        {/* This shows if the user IS logged in */}
-        <SignedIn>
-          <BottomNav></BottomNav>
-          <UserButton />
-        </SignedIn>
+        <TurnBasedRecorder></TurnBasedRecorder>
+        <BottomNav></BottomNav>
       </header>
-      <main>
-
-      </main>
+      <main></main>
     </div>
   );
 }

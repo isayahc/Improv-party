@@ -6,10 +6,13 @@
   "scripts": {
     "dev": "bun --hot src/index.ts",
     "start": "NODE_ENV=production bun src/index.ts",
-    "build": "bun run build.ts"
+    "build": "bun run build.ts",
+    "server": "bun run src/server.ts"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.60.1",
+    "@elevenlabs/client": "^0.14.0",
+    "@elevenlabs/elevenlabs-js": "^2.35.0",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-slot": "^1.2.3",

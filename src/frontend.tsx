@@ -17,12 +17,16 @@ if (!PUBLISHABLE_KEY) {
 }
 
 const elem = document.getElementById("root")!;
+// const app = (
+//   <StrictMode>
+//     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+//       <App />
+//     </ClerkProvider>
+//   </StrictMode>
+// );
+
 const app = (
-  <StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
       <App />
-    </ClerkProvider>
-  </StrictMode>
 );
 
 if (import.meta.hot) {
