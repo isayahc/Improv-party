@@ -12,7 +12,7 @@ let currentTurnIndex = 0;
 console.log(`❤️ Heartbeat Server running on port ${process.env.PORT || 3000}`);
 
 serve({
-  port: process.env.PORT || 3003,
+  port: process.env.PORT || 3000,
   async fetch(req) {
     const url = new URL(req.url);
 
