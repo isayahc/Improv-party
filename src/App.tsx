@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 import { APITester } from "./APITester";
 import "./index.css";
+import { BottomNav } from "./components/bottomNavigation";
 
 import logo from "./logo.svg";
 import reactLogo from "./react.svg";
@@ -49,12 +50,11 @@ export function App() {
 
         {/* This shows if the user IS logged in */}
         <SignedIn>
-          {/* <BottomNav></BottomNav> */}
+          <BottomNav></BottomNav>
           <UserButton />
         </SignedIn>
       </header>
       <main>
-          {/* <RecipeBuilder></RecipeBuilder> */}
 
       </main>
     </div>
