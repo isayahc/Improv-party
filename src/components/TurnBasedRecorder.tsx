@@ -4,7 +4,8 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { Mic, Square, User, Radio, Activity } from "lucide-react"
 
 // TODO: Replace with your Railway URL
-const API_URL = "http://localhost:3000"
+// const API_URL = "http://localhost:3000"
+const API_URL = process.env.BUN_PUBLIC_API_URL;
 
 export function TurnBasedRecorder() {
   // Generate a random ID once per session
